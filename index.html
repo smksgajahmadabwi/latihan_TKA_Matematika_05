@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LATIHAN SOAL TKA MATEMATIKA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 95%;
+            max-width: 1200px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f9f9f9;
+            border-left: 1px solid #eee;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .timer-box, .current-time-box {
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #00796b;
+        }
+        .timer-box strong, .current-time-box strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 1.2em;
+            color: #004d40;
+        }
+
+        .question-navigation {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .question-navigation h3 {
+            margin-top: 0;
+            color: #555;
+            font-size: 1.2em;
+        }
+
+        .question-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .question-list button {
+            width: 40px;
+            height: 40px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #333;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .question-list button:hover {
+            background-color: #ddd;
+            border-color: #bbb;
+        }
+
+        .question-list button.active {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .question-list button.answered {
+            background-color: #28a745;
+            color: #fff;
+            border-color: #28a745;
+        }
+        
+        .question-list button.answered.active {
+            background-color: #007bff; /* Active answered question retains blue */
+            border-color: #007bff;
+        }
+
+        .question-area {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        .question-area h2 {
+            color: #333;
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+        
+        .question-text p {
+            margin-bottom: 10px;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .navigation-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navigation-buttons button, .finish-button button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .navigation-buttons button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .prev-button {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .prev-button:hover:enabled {
+            background-color: #5a6268;
+        }
+
+        .next-button {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .next-button:hover:enabled {
+            background-color: #0056b3;
+        }
+
+        .finish-button {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .finish-button button {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 1.1em;
+        }
+        .finish-button button:hover {
+            background-color: #c82333;
+        }
+
+        .score-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .modal-content .score-value {
+            font-size: 2.5em;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
+
+        .question-text img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        /* Review mode specific styles */
+        .review-mode-info {
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .review-solution-button {
+            background-color: #17a2b8;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        .review-solution-button:hover {
+            background-color: #138496;
+        }
+        .solution-text {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #e2f0fb;
+            border: 1px solid #bce8f1;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+        .solution-text p {
+            margin-bottom: 5px;
+        }
+        .correct-answer-label {
+            font-weight: bold;
+            color: #28a745; /* Green for correct answer */
+        }
+        .user-answer-label {
+            font-weight: bold;
+            color: #007bff; /* Blue for user's answer */
+        }
+        .wrong-answer-label {
+            font-weight: bold;
+            color: #dc3545; /* Red if user's answer is wrong */
+        }
+        .options.review label input[type="radio"] {
+            pointer-events: none; /* Disable radio button interaction in review */
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+            }
+            .sidebar {
+                width: 100%;
+                border-left: none;
+                border-bottom: 1px solid #eee;
+                order: 2;
+            }
+            .main-content {
+                order: 1;
+            }
+            .question-list {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+                gap: 5px;
+            }
+            .question-list button {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8em;
+            }
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .finish-button button {
+                width: 100%;
+            }
+        }
+    </style>
+    <!-- Load MathJax for LaTeX rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <h1>LATIHAN SOAL TKA MATEMATIKA - 05</h1>
+                <div id="current-time" class="current-time-box"><strong></strong></div>
+            </div>
+            
+            <div id="question-area" class="question-area">
+                <!-- Question will be loaded here by JavaScript -->
+            </div>
+
+            <div id="exam-navigation" class="navigation-buttons">
+                <button id="prev-button" class="prev-button" disabled>Previous</button>
+                <button id="next-button" class="next-button">Next</button>
+            </div>
+            <div id="exam-finish" class="finish-button">
+                <button id="finish-exam-button">Selesai Ujian</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="timer-box">
+                Waktu Tersisa: <strong id="countdown-timer">00:00:00</strong>
+            </div>
+            <div class="question-navigation">
+                <h3>Nomor Soal</h3>
+                <div id="question-list" class="question-list">
+                    <!-- Question navigation buttons will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Modal -->
+    <div id="scoreModal" class="score-modal">
+        <div class="modal-content">
+            <h2>Ujian Selesai!</h2>
+            <p>Anda telah menyelesaikan ujian.</p>
+            <p>Skor Anda:</p>
+            <div id="finalScore" class="score-value"></div>
+            <p id="feedbackMessage"></p>
+            <button id="closeModal">Lihat Hasil dan Solusi</button>
+        </div>
+    </div>
+
+    <script>
+        // Array of questions, options, correct answers, and solutions
+        const questions = [
+            {
+                id: 1,
+                text: "Jika \\(\\log_3(x^2 - 7x + 21) = 2\\), maka nilai \\(x\\) yang memenuhi adalah ....",
+                options: ["\\(2\\) atau \\(5\\)", "\\(3\\) atau \\(4\\)", "\\(1\\) atau \\(6\\)", "\\(0\\) atau \\(7\\)", "Tidak ada nilai \\(x\\) real"],
+                answer: "\\(3\\) atau \\(4\\)",
+                solution: "Langkah 1: Ubah persamaan logaritma ke bentuk eksponen.<br>Jika \\(\\log_a b = c\\), maka \\(b = a^c\\).<br>\\(x^2 - 7x + 21 = 3^2\\)<br>\\(x^2 - 7x + 21 = 9\\)<br><br>Langkah 2: Sederhanakan menjadi persamaan kuadrat.<br>\\(x^2 - 7x + 12 = 0\\)<br><br>Langkah 3: Faktorkan persamaan kuadrat.<br>Cari dua bilangan yang jika dikalikan hasilnya \\(12\\) dan jika dijumlahkan hasilnya \\(-7\\). Bilangan tersebut adalah \\(-3\\) dan \\(-4\\).<br>\\((x - 3)(x - 4) = 0\\)<br><br>Langkah 4: Tentukan nilai \\(x\\).<br>\\(x - 3 = 0 \\implies x = 3\\)<br>\\(x - 4 = 0 \\implies x = 4\\)<br><br>Langkah 5: Periksa syarat numerus logaritma. Numerus harus lebih besar dari 0.<br>Untuk \\(x=3\\): \\(3^2 - 7(3) + 21 = 9 - 21 + 21 = 9 > 0\\) (memenuhi)<br>Untuk \\(x=4\\): \\(4^2 - 7(4) + 21 = 16 - 28 + 21 = 9 > 0\\) (memenuhi)<br><br>Jadi, nilai \\(x\\) yang memenuhi adalah \\(3\\) atau \\(4\\)."
+            },
+            {
+                id: 2,
+                text: "Diketahui matriks \\(A = \\begin{pmatrix} 2 & -1 \\\\ x & 3 \\end{pmatrix}\\). Jika matriks \\(A\\) tidak memiliki invers, maka nilai \\(x\\) adalah ....",
+                options: ["\\(6\\)", "\\(-6\\)", "\\(2\\)", "\\(-2\\)", "\\(0\\)"],
+                answer: "\\(-6\\)",
+                solution: "Suatu matriks \\(M\\) tidak memiliki invers jika dan hanya jika determinan \\(M\\) adalah 0.<br><br>Langkah 1: Hitung determinan matriks \\(A\\).<br>Untuk matriks \\(A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\\), determinannya adalah \\(ad - bc\\).<br>\\(\\det(A) = (2)(3) - (-1)(x)\\)<br>\\(\\det(A) = 6 - (-x)\\)<br>\\(\\det(A) = 6 + x\\)<br><br>Langkah 2: Agar matriks \\(A\\) tidak memiliki invers, determinannya harus 0.<br>\\(6 + x = 0\\)<br>\\(x = -6\\)<br><br>Jadi, nilai \\(x\\) agar matriks \\(A\\) tidak memiliki invers adalah \\(-6\\)."
+            },
+            {
+                id: 3,
+                text: "Diketahui fungsi \\(f(x) = \\frac{x-2}{x+1}\\) dan \\(g(x) = 3x-1\\). Tentukan \\((g \\circ f)(x)\\).",
+                options: ["\\(\\frac{3x-7}{x+1}\\)", "\\(\\frac{3x-4}{x+1}\\)", "\\(\\frac{2x-7}{x+1}\\)", "\\(\\frac{2x-4}{x+1}\\)", "\\(\\frac{3x+4}{x+1}\\)"],
+                answer: "\\(\\frac{2x-7}{x+1}\\)",
+                solution: "Langkah 1: Tentukan fungsi komposisi \\((g \\circ f)(x)\\).<br>\\((g \\circ f)(x) = g(f(x))\\)<br>Substitusikan \\(f(x) = \\frac{x-2}{x+1}\\) ke dalam \\(g(x) = 3x-1\\).<br>\\(g(f(x)) = 3\\left(\\frac{x-2}{x+1}\\right) - 1\\)<br><br>Langkah 2: Sederhanakan ekspresi.<br>Untuk mengurangkan \\(1\\), ubah \\(1\\) menjadi pecahan dengan penyebut yang sama.<br>\\(1 = \\frac{x+1}{x+1}\\)<br>\\(g(f(x)) = \\frac{3(x-2)}{x+1} - \\frac{x+1}{x+1}\\)<br>\\(g(f(x)) = \\frac{3x - 6 - (x + 1)}{x+1}\\)<br>\\(g(f(x)) = \\frac{3x - 6 - x - 1}{x+1}\\)<br>\\(g(f(x)) = \\frac{2x - 7}{x+1}\\)<br><br>Jadi, \\((g \\circ f)(x) = \\frac{2x - 7}{x+1}\\)."
+            },
+            {
+                id: 4,
+                text: "Tentukan nilai dari \\(\\lim_{x \\to 0} \\frac{\\sin^2 x}{2x \\tan x}\\).",
+                options: ["\\(0\\)", "\\(\\frac{1}{4}\\)", "\\(\\frac{1}{2}\\)", "\\(1\\)", "Tidak ada"],
+                answer: "\\(\\frac{1}{2}\\)",
+                solution: "Ini adalah limit trigonometri yang melibatkan bentuk tak tentu \\(\\frac{0}{0}\\). Kita bisa menggunakan sifat limit dasar \\(\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1\\) dan \\(\\lim_{x \\to 0} \\frac{\\tan x}{x} = 1\\).<br><br>Langkah 1: Tulis ulang ekspresi limit.<br>\\(\\lim_{x \\to 0} \\frac{\\sin x \\cdot \\sin x}{2x \\cdot \\tan x}\\)<br><br>Langkah 2: Pisahkan suku-suku untuk menerapkan sifat limit.<br>\\(\\lim_{x \\to 0} \\left( \\frac{\\sin x}{x} \\cdot \\frac{\\sin x}{\\tan x} \\cdot \\frac{1}{2} \\right)\\)<br><br>Langkah 3: Ubah \\(\\tan x\\) menjadi \\(\\frac{\\sin x}{\\cos x}\\) agar lebih mudah disederhanakan.<br>\\(\\frac{\\sin x}{\\tan x} = \\frac{\\sin x}{\\frac{\\sin x}{\\cos x}} = \\sin x \\cdot \\frac{\\cos x}{\\sin x} = \\cos x\\)<br><br>Langkah 4: Substitusikan kembali ke dalam limit.<br>\\(\\lim_{x \\to 0} \\left( \\frac{\\sin x}{x} \\cdot \\cos x \\cdot \\frac{1}{2} \\right)\\)<br><br>Langkah 5: Terapkan sifat limit.<br>\\(\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1\\)<br>\\(\\lim_{x \\to 0} \\cos x = \\cos 0 = 1\\)<br><br>Maka, nilai limitnya adalah \\(1 \\cdot 1 \\cdot \\frac{1}{2} = \\frac{1}{2}\\).<br><br>Jadi, nilai dari \\(\\lim_{x \\to 0} \\frac{\\sin^2 x}{2x \\tan x}\\) adalah \\(\\frac{1}{2}\\)."
+            },
+            {
+                id: 5,
+                text: "Diberikan data: \\(3, 5, 7, x, 11, 12\\). Jika median data tersebut adalah \\(8\\) dan data sudah terurut, maka nilai \\(x\\) adalah ....",
+                options: ["\\(6\\)", "\\(7\\)", "\\(8\\)", "\\(9\\)", "\\(10\\)"],
+                answer: "\\(9\\)",
+                solution: "Langkah 1: Urutkan data. Data sudah terurut: \\(3, 5, 7, x, 11, 12\\).<br><br>Langkah 2: Tentukan posisi median.<br>Jumlah data \\(n = 6\\) (genap).<br>Median untuk data genap adalah rata-rata dari dua nilai tengah, yaitu data ke-\\(\\frac{n}{2}\\) dan data ke-\\(\\frac{n}{2}+1\\).<br>Data ke-\\(\\frac{6}{2} = 3\\) adalah \\(7\\).<br>Data ke-\\(\\frac{6}{2}+1 = 4\\) adalah \\(x\\).<br><br>Langkah 3: Gunakan informasi median yang diberikan.<br>Median \\(= 8\\)<br>\\(\\frac{7 + x}{2} = 8\\)<br><br>Langkah 4: Selesaikan untuk \\(x\\).<br>\\(7 + x = 8 \\times 2\\)<br>\\(7 + x = 16\\)<br>\\(x = 16 - 7\\)<br>\\(x = 9\\)<br><br>Langkah 5: Periksa konsistensi nilai \\(x\\) dengan urutan data.<br>Jika \\(x = 9\\), maka data menjadi \\(3, 5, 7, 9, 11, 12\\). Ini adalah data yang terurut.<br><br>Jadi, nilai \\(x\\) adalah \\(9\\)."
+            },
+            {
+                id: 6,
+                text: "Sebuah kotak berisi 6 bola merah dan 4 bola putih. Jika 3 bola diambil sekaligus secara acak, berapa peluang terambil 2 bola merah dan 1 bola putih?",
+                options: ["\\(\\frac{1}{2}\\)", "\\(\\frac{3}{5}\\)", "\\(\\frac{2}{3}\\)", "\\(\\frac{1}{5}\\)", "\\(\\frac{3}{10}\\)"],
+                answer: "\\(\\frac{1}{2}\\)",
+                solution: "Langkah 1: Tentukan jumlah total bola.<br>Total bola = \\(6\\) (merah) + \\(4\\) (putih) = \\(10\\) bola.<br><br>Langkah 2: Hitung jumlah cara mengambil 3 bola dari total 10 bola (ruang sampel).<br>Ini adalah kombinasi \\(C(10, 3)\\) karena urutan tidak diperhatikan.<br>\\(C(10, 3) = \\frac{10!}{3!(10-3)!} = \\frac{10 \\times 9 \\times 8}{3 \\times 2 \\times 1} = 10 \\times 3 \\times 4 = 120\\) cara.<br><br>Langkah 3: Hitung jumlah cara mengambil 2 bola merah dari 6 bola merah.<br>\\(C(6, 2) = \\frac{6!}{2!(6-2)!} = \\frac{6 \\times 5}{2 \\times 1} = 15\\) cara.<br><br>Langkah 4: Hitung jumlah cara mengambil 1 bola putih dari 4 bola putih.<br>\\(C(4, 1) = \\frac{4!}{1!(4-1)!} = \\frac{4}{1} = 4\\) cara.<br><br>Langkah 5: Hitung jumlah cara kejadian yang diinginkan (2 merah dan 1 putih).<br>Jumlah kejadian = \\(C(6, 2) \\times C(4, 1) = 15 \\times 4 = 60\\) cara.<br><br>Langkah 6: Hitung peluang.<br>\\(P = \\frac{\\text{Jumlah kejadian yang diinginkan}}{\\text{Total kemungkinan}} = \\frac{60}{120} = \\frac{1}{2}\\).<br><br>Jadi, peluang terambil 2 bola merah dan 1 bola putih adalah \\(\\frac{1}{2}\\)."
+            },
+            {
+                id: 7,
+                text: "Turunan pertama dari \\(f(x) = (3x^2 - 5x)^4\\) adalah ....",
+                options: ["\\(4(3x^2 - 5x)^3\\)", "\\(4(6x - 5)(3x^2 - 5x)^3\\)", "\\((6x - 5)(3x^2 - 5x)^3\\)", "\\(12x(3x^2 - 5x)^3\\)", "\\((6x - 5) \\cdot 4(3x^2 - 5x)^3\\)"],
+                answer: "\\(4(6x - 5)(3x^2 - 5x)^3\\)",
+                solution: "Gunakan aturan rantai untuk turunan: Jika \\(f(x) = (g(x))^n\\), maka \\(f'(x) = n(g(x))^{n-1} \\cdot g'(x)\\).<br><br>Langkah 1: Identifikasi \\(g(x)\\) dan \\(n\\).<br>Dalam kasus ini, \\(g(x) = 3x^2 - 5x\\) dan \\(n = 4\\).<br><br>Langkah 2: Hitung turunan dari \\(g(x)\\), yaitu \\(g'(x)\\).<br>\\(g'(x) = \\frac{d}{dx}(3x^2 - 5x) = 3(2x) - 5(1) = 6x - 5\\).<br><br>Langkah 3: Terapkan aturan rantai.<br>\\(f'(x) = 4(3x^2 - 5x)^{4-1} \\cdot (6x - 5)\\)<br>\\(f'(x) = 4(3x^2 - 5x)^3 (6x - 5)\\)<br><br>Atau ditulis sebagai \\(4(6x - 5)(3x^2 - 5x)^3\\).<br><br>Jadi, turunan pertama dari \\(f(x) = (3x^2 - 5x)^4\\) adalah \\(4(6x - 5)(3x^2 - 5x)^3\\)."
+            },
+            {
+                id: 8,
+                text: "Tentukan persamaan garis singgung pada lingkaran \\(x^2 + y^2 = 25\\) di titik \\((3, 4)\\).",
+                options: ["\\(3x + 4y = 25\\)", "\\(4x + 3y = 25\\)", "\\(3x - 4y = 25\\)", "\\(4x - 3y = 25\\)", "\\(y = -\\frac{3}{4}x + \\frac{25}{4}\\)"],
+                answer: "\\(3x + 4y = 25\\)",
+                solution: "Langkah 1: Pahami bentuk persamaan lingkaran dan titik singgung.<br>Persamaan lingkaran adalah \\(x^2 + y^2 = r^2\\), di mana pusatnya \\((0,0)\\) dan jari-jari \\(r\\). Dalam kasus ini, \\(r^2 = 25\\).<br>Titik singgung adalah \\((x_1, y_1) = (3, 4)\\).<br><br>Langkah 2: Gunakan rumus persamaan garis singgung untuk lingkaran berpusat di \\((0,0)\\).<br>Rumusnya adalah \\(x_1 x + y_1 y = r^2\\).<br><br>Langkah 3: Substitusikan nilai \\(x_1, y_1\\) dan \\(r^2\\) ke dalam rumus.<br>\\(3x + 4y = 25\\).<br><br>Jadi, persamaan garis singgung pada lingkaran \\(x^2 + y^2 = 25\\) di titik \\((3, 4)\\) adalah \\(3x + 4y = 25\\)."
+            },
+            {
+                id: 9,
+                text: "Jika \\(\\int_1^3 (3x^2 - 4x + k) dx = 20\\), maka nilai \\(k\\) adalah ....",
+                options: ["1", "2", "3", "4", "5"],
+                answer: "5",
+                solution: "Langkah 1: Integralkan fungsi \\((3x^2 - 4x + k)\\).<br>\\(\\int (3x^2 - 4x + k) dx = \\frac{3}{3}x^3 - \\frac{4}{2}x^2 + kx + C = x^3 - 2x^2 + kx + C\\).<br><br>Langkah 2: Terapkan batas integrasi (integral tentu).<br>\\(\\left[x^3 - 2x^2 + kx\\right]_1^3 = (3^3 - 2(3)^2 + k(3)) - (1^3 - 2(1)^2 + k(1))\\)<br>\\(\\quad = (27 - 2(9) + 3k) - (1 - 2 + k)\\)<br>\\(\\quad = (27 - 18 + 3k) - (-1 + k)\\)<br>\\(\\quad = (9 + 3k) - (-1 + k)\\)<br>\\(\\quad = 9 + 3k + 1 - k\\)<br>\\(\\quad = 10 + 2k\\)<br><br>Langkah 3: Samakan hasil integral dengan \\(20\\) dan selesaikan untuk \\(k\\).<br>\\(10 + 2k = 20\\)<br>\\(2k = 20 - 10\\)<br>\\(2k = 10\\)<br>\\(k = \\frac{10}{2}\\)<br>\\(k = 5\\)<br><br>Jadi, nilai \\(k\\) adalah \\(5\\)."
+            },
+            {
+                id: 10,
+                text: "Diketahui vektor \\(\\vec{a} = 2\\vec{i} - \\vec{j} + 3\\vec{k}\\) dan \\(\\vec{b} = \\vec{i} + 2\\vec{j} - \\vec{k}\\). Tentukan hasil dari \\(\\vec{a} \\cdot \\vec{b}\\).",
+                options: ["\\(-3\\)", "\\(-1\\)", "\\(0\\)", "\\(1\\)", "\\(3\\)"],
+                answer: "\\(-3\\)",
+                solution: "Produk titik (dot product) dari dua vektor \\(\\vec{a} = a_1\\vec{i} + a_2\\vec{j} + a_3\\vec{k}\\) dan \\(\\vec{b} = b_1\\vec{i} + b_2\\vec{j} + b_3\\vec{k}\\) adalah \\(\\vec{a} \\cdot \\vec{b} = a_1 b_1 + a_2 b_2 + a_3 b_3\\).<br><br>Diketahui:<br>\\(\\vec{a} = 2\\vec{i} - \\vec{j} + 3\\vec{k}\\)<br>\\(\\vec{b} = \\vec{i} + 2\\vec{j} - \\vec{k}\\)<br><br>Langkah 1: Identifikasi komponen-komponen vektor.<br>\\(a_1 = 2, a_2 = -1, a_3 = 3\\)<br>\\(b_1 = 1, b_2 = 2, b_3 = -1\\)<br><br>Langkah 2: Hitung produk titik.<br>\\(\\vec{a} \\cdot \\vec{b} = (2)(1) + (-1)(2) + (3)(-1)\\)<br>\\(\\quad = 2 - 2 - 3\\)<br>\\(\\quad = -3\\)<br><br>Jadi, hasil dari \\(\\vec{a} \\cdot \\vec{b}\\) adalah \\(-3\\)."
+            },
+            {
+                id: 11,
+                text: "Penyelesaian dari pertidaksamaan \\(|2x - 3| \\leq 5\\) adalah ....",
+                options: ["\\(-1 \\leq x \\leq 4\\)", "\\(-4 \\leq x \\leq 1\\)", "\\(x \\leq -1\\) atau \\(x \\geq 4\\)", "\\(x \\leq -4\\) atau \\(x \\geq 1\\)", "Tidak ada penyelesaian"],
+                answer: "\\(-1 \\leq x \\leq 4\\)",
+                solution: "Langkah 1: Pahami sifat pertidaksamaan nilai mutlak.<br>Jika \\(|A| \\leq B\\) (dengan \\(B \\geq 0\\)), maka \\(-B \\leq A \\leq B\\).<br><br>Dalam kasus ini, \\(A = 2x - 3\\) dan \\(B = 5\\). Karena \\(5 \\geq 0\\), kita bisa menerapkan sifat ini.<br>\\(-5 \\leq 2x - 3 \\leq 5\\)<br><br>Langkah 2: Tambahkan \\(3\\) ke semua bagian pertidaksamaan.<br>\\(-5 + 3 \\leq 2x - 3 + 3 \\leq 5 + 3\\)<br>\\(-2 \\leq 2x \\leq 8\\)<br><br>Langkah 3: Bagi semua bagian pertidaksamaan dengan \\(2\\).<br>\\(\\frac{-2}{2} \\leq \\frac{2x}{2} \\leq \\frac{8}{2}\\)<br>\\(-1 \\leq x \\leq 4\\)<br><br>Jadi, penyelesaian dari pertidaksamaan \\(|2x - 3| \\leq 5\\) adalah \\(-1 \\leq x \\leq 4\\)."
+            },
+            {
+                id: 12,
+                text: "Tentukan hasil dari \\(\\int x\\sqrt{x^2+1} dx\\) menggunakan substitusi.",
+                options: ["\\(\\frac{1}{3}(x^2+1)^{3/2} + C\\)", "\\(\\frac{2}{3}(x^2+1)^{3/2} + C\\)", "\\(\\frac{1}{2}(x^2+1)^{3/2} + C\\)", "\\(\\frac{1}{3}\\sqrt{x^2+1} + C\\)", "\\(\\frac{1}{2}\\sqrt{x^2+1} + C\\)"],
+                answer: "\\(\\frac{1}{3}(x^2+1)^{3/2} + C\\)",
+                solution: "Langkah 1: Lakukan substitusi.<br>Misalkan \\(u = x^2+1\\).<br>Turunkan \\(u\\) terhadap \\(x\\): \\(\\frac{du}{dx} = 2x\\).<br>Maka, \\(dx = \\frac{du}{2x}\\).<br><br>Langkah 2: Substitusikan ke dalam integral.<br>\\(\\int x\\sqrt{u} \\frac{du}{2x}\\)<br>\\(\\int \\frac{1}{2}\\sqrt{u} du\\)<br>\\(\\int \\frac{1}{2}u^{1/2} du\\)<br><br>Langkah 3: Integralkan terhadap \\(u\\).<br>\\(\\frac{1}{2} \\cdot \\frac{1}{\\frac{1}{2}+1}u^{\\frac{1}{2}+1} + C\\)<br>\\(\\frac{1}{2} \\cdot \\frac{1}{\\frac{3}{2}}u^{\\frac{3}{2}} + C\\)<br>\\(\\frac{1}{2} \\cdot \\frac{2}{3}u^{\\frac{3}{2}} + C\\)<br>\\(\\frac{1}{3}u^{3/2} + C\\)<br><br>Langkah 4: Substitusikan kembali \\(u = x^2+1\\).<br>\\(\\frac{1}{3}(x^2+1)^{3/2} + C\\).<br><br>Jadi, hasil dari \\(\\int x\\sqrt{x^2+1} dx\\) adalah \\(\\frac{1}{3}(x^2+1)^{3/2} + C\\)."
+            },
+            {
+                id: 13,
+                text: "Suku ke-n dari suatu barisan geometri adalah \\(U_n = 2 \\cdot 3^{n-1}\\). Tentukan jumlah \\(4\\) suku pertama dari barisan tersebut.",
+                options: ["\\(20\\)", "\\(40\\)", "\\(80\\)", "\\(81\\)", "\\(100\\)"],
+                answer: "\\(80\\)",
+                solution: "Langkah 1: Tentukan suku pertama (\\(a\\)) dan rasio (\\(r\\)).<br>Dari rumus \\(U_n = 2 \\cdot 3^{n-1}\\):<br>Suku pertama \\(U_1 = a = 2 \\cdot 3^{1-1} = 2 \\cdot 3^0 = 2 \\cdot 1 = 2\\).<br>Rasio \\(r\\) adalah basis dari eksponen, yaitu \\(3\\).<br><br>Langkah 2: Gunakan rumus jumlah \\(n\\) suku pertama barisan geometri (\\(S_n\\)).<br>Karena \\(r > 1\\), gunakan rumus: \\(S_n = \\frac{a(r^n - 1)}{r - 1}\\)<br>Kita ingin mencari \\(S_4\\) (jumlah 4 suku pertama), jadi \\(n = 4\\).<br><br>Langkah 3: Substitusikan nilai-nilai yang diketahui ke dalam rumus \\(S_n\\).<br>\\(S_4 = \\frac{2(3^4 - 1)}{3 - 1}\\)<br>\\(S_4 = \\frac{2(81 - 1)}{2}\\)<br>\\(S_4 = \\frac{2(80)}{2}\\)<br>\\(S_4 = 80\\)<br><br>Jadi, jumlah \\(4\\) suku pertama dari barisan tersebut adalah \\(80\\)."
+            },
+            {
+                id: 14,
+                text: "Diketahui persamaan garis \\(2x - 3y = 6\\). Tentukan persamaan garis yang tegak lurus dengan garis tersebut dan melalui titik \\((1, 5)\\).",
+                options: ["\\(y = -\\frac{3}{2}x + \\frac{13}{2}\\)", "\\(y = \\frac{2}{3}x + \\frac{13}{3}\\)", "\\(y = \\frac{3}{2}x + \\frac{7}{2}\\)", "\\(y = -\\frac{2}{3}x + \\frac{17}{3}\\)", "\\(y = \\frac{3}{2}x - \\frac{7}{2}\\)"],
+                answer: "\\(y = -\\frac{3}{2}x + \\frac{13}{2}\\)",
+                solution: "Langkah 1: Tentukan gradien garis yang diketahui.<br>Ubah persamaan \\(2x - 3y = 6\\) ke bentuk \\(y = mx + c\\).<br>\\(-3y = -2x + 6\\)<br>\\(y = \\frac{-2x}{-3} + \\frac{6}{-3}\\)<br>\\(y = \\frac{2}{3}x - 2\\)<br>Jadi, gradien garis ini adalah \\(m_1 = \\frac{2}{3}\\).<br><br>Langkah 2: Tentukan gradien garis yang tegak lurus (\\(m_2\\)).<br>Untuk garis yang tegak lurus, \\(m_1 \\cdot m_2 = -1\\).<br>\\(\\frac{2}{3} \\cdot m_2 = -1\\)<br>\\(m_2 = -\\frac{3}{2}\\).<br><br>Langkah 3: Gunakan titik \\((1, 5)\\) dan gradien \\(m_2 = -\\frac{3}{2}\\) untuk menemukan persamaan garis.<br>Gunakan rumus \\(y - y_1 = m(x - x_1)\\).<br>\\(y - 5 = -\\frac{3}{2}(x - 1)\\)<br><br>Langkah 4: Sederhanakan persamaan.<br>\\(y - 5 = -\\frac{3}{2}x + \\frac{3}{2}\\)<br>\\(y = -\\frac{3}{2}x + \\frac{3}{2} + 5\\)<br>\\(y = -\\frac{3}{2}x + \\frac{3}{2} + \\frac{10}{2}\\)<br>\\(y = -\\frac{3}{2}x + \\frac{13}{2}\\)<br><br>Jadi, persamaan garis yang tegak lurus dengan garis \\(2x - 3y = 6\\) dan melalui titik \\((1, 5)\\) adalah \\(y = -\\frac{3}{2}x + \\frac{13}{2}\\)."
+            },
+            {
+                id: 15,
+                text: "Tentukan nilai \\(x\\) yang memenuhi persamaan \\(e^{2x} - 5e^x + 6 = 0\\).",
+                options: ["\\(\\ln 2\\) atau \\(\\ln 3\\)", "\\(\\ln 6\\) atau \\(\\ln 1\\)", "\\(\\ln 2\\) saja", "\\(\\ln 3\\) saja", "Tidak ada nilai \\(x\\) real"],
+                answer: "\\(\\ln 2\\) atau \\(\\ln 3\\)",
+                solution: "Langkah 1: Ubah persamaan menjadi bentuk kuadrat.<br>Misalkan \\(y = e^x\\). Maka \\(e^{2x} = (e^x)^2 = y^2\\).<br>Persamaan menjadi \\(y^2 - 5y + 6 = 0\\).<br><br>Langkah 2: Faktorkan persamaan kuadrat.<br>Cari dua bilangan yang jika dikalikan hasilnya \\(6\\) dan jika dijumlahkan hasilnya \\(-5\\). Bilangan tersebut adalah \\(-2\\) dan \\(-3\\).<br>\\((y - 2)(y - 3) = 0\\)<br><br>Langkah 3: Tentukan nilai \\(y\\).<br>\\(y - 2 = 0 \\implies y = 2\\)<br>\\(y - 3 = 0 \\implies y = 3\\)<br><br>Langkah 4: Substitusikan kembali \\(y = e^x\\) dan selesaikan untuk \\(x\\).<br>Kasus 1: \\(e^x = 2\\)<br>Untuk menemukan \\(x\\), gunakan logaritma natural (\\(\\ln\\)).<br>\\(x = \\ln 2\\)<br><br>Kasus 2: \\(e^x = 3\\)<br>\\(x = \\ln 3\\)<br><br>Jadi, nilai \\(x\\) yang memenuhi persamaan adalah \\(\\ln 2\\) atau \\(\\ln 3\\)."
+            },
+            {
+                id: 16,
+                text: "Persamaan bayangan garis \\(y = 2x - 3\\) oleh translasi \\(T = \\begin{pmatrix} 2 \\\\ -1 \\end{pmatrix}\\) adalah ....",
+                options: ["\\(y = 2x - 8\\)", "\\(y = 2x - 6\\)", "\\(y = 2x - 4\\)", "\\(y = 2x - 2\\)", "\\(y = 2x - 0\\)"],
+                answer: "\\(y = 2x - 8\\)",
+                solution: "Langkah 1: Tentukan hubungan antara koordinat asli \\((x, y))\\) dan koordinat bayangan \\((x', y'))\\) setelah translasi.<br>Diketahui translasi \\(T = \\begin{pmatrix} 2 \\\\ -1 \\end{pmatrix}\\).<br>Maka:<br>\\(x' = x + 2 \\implies x = x' - 2\\)<br>\\(y' = y - 1 \\implies y = y' + 1\\)<br><br>Langkah 2: Substitusikan ekspresi untuk \\(x\\) dan \\(y\\) ke dalam persamaan garis asli.<br>Persamaan garis asli: \\(y = 2x - 3\\)<br>Substitusikan \\(y = y' + 1\\) dan \\(x = x' - 2\\):<br>\\(y' + 1 = 2(x' - 2) - 3\\)<br><br>Langkah 3: Sederhanakan persamaan untuk mendapatkan persamaan bayangan.<br>\\(y' + 1 = 2x' - 4 - 3\\)<br>\\(y' + 1 = 2x' - 7\\)<br>\\(y' = 2x' - 7 - 1\\)<br>\\(y' = 2x' - 8\\)<br><br>Untuk notasi akhir, kita bisa menghilangkan tanda aksen.<br>Jadi, persamaan bayangan garis adalah \\(y = 2x - 8\\)."
+            },
+            {
+                id: 17,
+                text: "Tentukan himpunan penyelesaian dari persamaan trigonometri \\(2\\sin x - 1 = 0\\) untuk \\(0^\\circ \\leq x \\leq 360^\\circ\\).",
+                options: ["\\(\\{30^\\circ, 150^\\circ\\}\\)", "\\(\\{30^\\circ, 210^\\circ\\}\\)", "\\(\\{60^\\circ, 120^\\circ\\}\\)", "\\(\\{150^\\circ, 330^\\circ\\}\\)", "\\(\\{210^\\circ, 330^\\circ\\}\\)"],
+                answer: "\\(\\{30^\\circ, 150^\\circ\\}\\)",
+                solution: "Langkah 1: Sederhanakan persamaan trigonometri.<br>\\(2\\sin x - 1 = 0\\)<br>\\(2\\sin x = 1\\)<br>\\(\\sin x = \\frac{1}{2}\\)<br><br>Langkah 2: Tentukan sudut referensi. Nilai \\(\\sin x = \\frac{1}{2}\\) terjadi pada sudut \\(30^\\circ\\) di kuadran I.<br><br>Langkah 3: Cari semua nilai \\(x\\) dalam interval \\(0^\\circ \\leq x \\leq 360^\\circ\\) di mana \\(\\sin x = \\frac{1}{2}\\).<br>Sinus positif berada di Kuadran I dan Kuadran II.<br>Di Kuadran I: \\(x_1 = 30^\\circ\\).<br>Di Kuadran II: \\(x_2 = 180^\\circ - 30^\\circ = 150^\\circ\\).<br><br>Langkah 4: Verifikasi bahwa nilai-nilai ini berada dalam interval yang diberikan.<br>Kedua nilai, \\(30^\\circ\\) dan \\(150^\\circ\\), berada dalam interval \\(0^\\circ \\leq x \\leq 360^\\circ\\).<br><br>Jadi, himpunan penyelesaiannya adalah \\(\\{30^\\circ, 150^\\circ\\}\\)."
+            },
+            {
+                id: 18,
+                text: "Sebuah usaha rumahan memproduksi dua jenis kue, kue lapis dan kue bolu. Untuk membuat satu loyang kue lapis dibutuhkan 200 gram terigu dan 100 gram gula. Untuk satu loyang kue bolu dibutuhkan 150 gram terigu dan 150 gram gula. Tersedia 6 kg terigu dan 5 kg gula. Keuntungan satu loyang kue lapis adalah Rp50.000,00 dan kue bolu Rp75.000,00. Tentukan keuntungan maksimum yang bisa diperoleh.",
+                options: ["Rp2.500.000,00", "Rp3.000.000,00", "Rp3.200.000,00", "Rp3.400.000,00", "Rp3.600.000,00"],
+                answer: "Rp2.500.000,00",
+                solution: "Langkah 1: Definisikan variabel dan ubah satuan ke gram.<br>Misalkan \\(x\\) = jumlah loyang kue lapis, \\(y\\) = jumlah loyang kue bolu.<br>Terigu: 6 kg = 6000 gram. Gula: 5 kg = 5000 gram.<br><br>Langkah 2: Buat model matematika (fungsi kendala dan fungsi tujuan).<br>Fungsi kendala:<br>Terigu: \\(200x + 150y \\leq 6000 \\implies 4x + 3y \\leq 120\\) ...(1)<br>Gula: \\(100x + 150y \\leq 5000 \\implies 2x + 3y \\leq 100\\) ...(2)<br>Kendala non-negatif: \\(x \\geq 0, y \\geq 0\\)<br><br>Fungsi tujuan: \\(Z = 50.000x + 75.000y\\)<br><br>Langkah 3: Cari titik-titik pojok daerah kelayakan.<br>a. Titik potong dengan sumbu \\(x\\):<br>   Dari (1): Jika \\(y=0, 4x=120 \\implies x=30\\). Titik \\((30, 0)\\).<br>   Dari (2): Jika \\(y=0, 2x=100 \\implies x=50\\). Titik \\((50, 0)\\). (Yang membatasi adalah \\((30,0)\\)).<br>b. Titik potong dengan sumbu \\(y\\):<br>   Dari (1): Jika \\(x=0, 3y=120 \\implies y=40\\). Titik \\((0, 40)\\).<br>   From (2): Jika \\(x=0, 3y=100 \\implies y=100/3 \\approx 33.33\\). Titik \\((0, 100/3)\\). (Yang membatasi adalah \\((0, 100/3)\\)).<br>c. Titik potong kedua garis (eliminasi):<br>   (1) \\(4x + 3y = 120\\)<br>   (2) \\(2x + 3y = 100\\)<br>   Kurangkan (2) dari (1): \\((4x + 3y) - (2x + 3y) = 120 - 100\\)<br>   \\(2x = 20 \\implies x = 10\\).<br>   Substitusikan \\(x=10\\) ke \\(2x + 3y = 100\\): \\(2(10) + 3y = 100 \\implies 20 + 3y = 100 \\implies 3y = 80 \\implies y = \\frac{80}{3}\\).<br>   Titik potong adalah \\((10, 80/3)\\).<br><br>Titik-titik pojok daerah kelayakan adalah \\((0,0)\\), \\((30,0)\\), \\((10, 80/3)\\), \\((0, 100/3)\\).<br><br>Langkah 4: Uji titik-titik pojok pada fungsi tujuan \\(Z = 50.000x + 75.000y\\).<br>a. Titik \\((0,0)\\) \\(\\implies Z = 0\\)<br>b. Titik \\((30,0)\\) \\(\\implies Z = 50.000(30) = 1.500.000\\)<br>c. Titik \\((0, 100/3)\\) \\(\\implies Z = 75.000(\\frac{100}{3}) = 25.000(100) = 2.500.000\\)<br>d. Titik \\((10, 80/3)\\) \\(\\implies Z = 50.000(10) + 75.000(\\frac{80}{3}) = 500.000 + 25.000(80) = 500.000 + 2.000.000 = 2.500.000\\)<br><br>Keuntungan maksimum yang dapat diperoleh adalah Rp2.500.000,00."
+            },
+            {
+                id: 19,
+                text: "Diketahui persamaan kuadrat \\(2x^2 + kx - 3 = 0\\). Jika salah satu akarnya adalah \\(3\\), maka nilai \\(k\\) adalah ....",
+                options: ["\\(-5\\)", "\\(-3\\)", "\\(0\\)", "\\(3\\)", "\\(5\\)"],
+                answer: "\\(-5\\)",
+                solution: "Jika salah satu akar persamaan kuadrat diketahui, kita bisa substitusikan akar tersebut ke dalam persamaan untuk mencari nilai konstanta yang tidak diketahui.<br><br>Persamaan kuadrat: \\(2x^2 + kx - 3 = 0\\)<br>Salah satu akar: \\(x = 3\\)<br><br>Langkah 1: Substitusikan \\(x = 3\\) ke dalam persamaan.<br>\\(2(3)^2 + k(3) - 3 = 0\\)<br>\\(2(9) + 3k - 3 = 0\\)<br>\\(18 + 3k - 3 = 0\\)<br><br>Langkah 2: Sederhanakan dan selesaikan untuk \\(k\\).<br>\\(15 + 3k = 0\\)<br>\\(3k = -15\\)<br>\\(k = \\frac{-15}{3}\\)<br>\\(k = -5\\)<br><br>Jadi, nilai \\(k\\) adalah \\(-5\\)."
+            },
+            {
+                id: 20,
+                text: "Sebuah deret geometri tak hingga memiliki suku pertama \\(a = 18\\) dan rasio \\(r = \\frac{2}{3}\\). Tentukan jumlah deret tak hingga tersebut.",
+                options: ["\\(30\\)", "\\(36\\)", "\\(45\\)", "\\(54\\)", "\\(60\\)"],
+                answer: "\\(54\\)",
+                solution: "Rumus jumlah deret geometri tak hingga adalah \\(S_\\infty = \\frac{a}{1 - r}\\), dengan syarat \\(|r| < 1\\).<br><br>Diketahui:<br>Suku pertama \\(a = 18\\)<br>Rasio \\(r = \\frac{2}{3}\\)<br>Karena \\(|\\frac{2}{3}| < 1\\), maka deret ini konvergen dan memiliki jumlah tak hingga.<br><br>Langkah 1: Substitusikan nilai \\(a\\) dan \\(r\\) ke dalam rumus.<br>\\(S_\\infty = \\frac{18}{1 - \\frac{2}{3}}\\$<br><br>Langkah 2: Sederhanakan penyebut.<br>\\(1 - \\frac{2}{3} = \\frac{3}{3} - \\frac{2}{3} = \\frac{1}{3}\\)<br><br>Langkah 3: Hitung \\(S_\\infty\\).<br>\\(S_\\infty = \\frac{18}{\\frac{1}{3}} = 18 \\times 3 = 54\\).<br><br>Jadi, jumlah deret tak hingga tersebut adalah \\(54\\)."
+            },
+            {
+                id: 21,
+                text: "Jika \\(f(x) = \\cos^2(3x - \\frac{\\pi}{4})\\), maka \\(f'(x)\\) adalah ....",
+                options: ["\\(-3\\sin(6x - \\frac{\\pi}{2})\\)", "\\(3\\sin(6x - \\frac{\\pi}{2})\\)", "\\(-6\\cos(3x - \\frac{\\pi}{4})\\sin(3x - \\frac{\\pi}{4})\\)", "\\(3\\sin(3x - \\frac{\\pi}{4})\\cos(3x - \\frac{\\pi}{4})\\)", "\\(-3\\sin(3x - \\frac{\\pi}{4})\\cos(3x - \\frac{\\pi}{4})\\)"],
+                answer: "\\(-3\\sin(6x - \\frac{\\pi}{2})\\)",
+                solution: "Langkah 1: Terapkan aturan rantai untuk \\(f(x) = (g(x))^n\\).<br>Di sini, \\(g(x) = \\cos(3x - \\frac{\\pi}{4})\\) dan \\(n=2\\).<br>\\(f'(x) = 2 \\cos(3x - \\frac{\\pi}{4}) \\cdot \\frac{d}{dx}(\\cos(3x - \\frac{\\pi}{4}))\\)<br><br>Langkah 2: Terapkan aturan rantai lagi untuk \\(\\frac{d}{dx}(\\cos(3x - \\frac{\\pi}{4}))\\).<br>Misalkan \\(u = 3x - \\frac{\\pi}{4}\\), maka \\(\\frac{du}{dx} = 3\\).<br>\\(\\frac{d}{dx}(\\cos u) = -\\sin u \\cdot \\frac{du}{dx} = -\\sin(3x - \\frac{\\pi}{4}) \\cdot 3\\)<br><br>Langkah 3: Gabungkan hasil.<br>\\(f'(x) = 2 \\cos(3x - \\frac{\\pi}{4}) \\cdot (-3\\sin(3x - \\frac{\\pi}{4}))\\)<br>\\(f'(x) = -6 \\sin(3x - \\frac{\\pi}{4}) \\cos(3x - \\frac{\\pi}{4})\\)<br><br>Langkah 4: Gunakan identitas trigonometri \\(\\sin(2A) = 2\\sin A \\cos A\\).<br>\\(f'(x) = -3 \\cdot [2\\sin(3x - \\frac{\\pi}{4}) \\cos(3x - \\frac{\\pi}{4})]\\)<br>\\(f'(x) = -3 \\sin(2(3x - \\frac{\\pi}{4}))\\)<br>\\(f'(x) = -3 \\sin(6x - \\frac{\\pi}{2})\\)<br><br>Jadi, \\(f'(x) = -3\\sin(6x - \\frac{\\pi}{2})\\)."
+            },
+            {
+                id: 22,
+                text: "Sebuah kotak berisi 10 bola, di antaranya 3 bola merah. Jika diambil 2 bola sekaligus secara acak, berapa peluang kedua bola yang terambil bukan bola merah?",
+                options: ["\\(\\frac{7}{15}\\)", "\\(\\frac{7}{30}\\)", "\\(\\frac{21}{50}\\)", "\\(\\frac{21}{100}\\)", "\\(\\frac{21}{45}\\)"],
+                answer: "\\(\\frac{7}{15}\\)",
+                solution: "Langkah 1: Tentukan jumlah total bola dan bola non-merah.<br>Total bola = 10.<br>Bola merah = 3.<br>Bola bukan merah (putih atau warna lain) = \\(10 - 3 = 7\\) bola.<br><br>Langkah 2: Hitung jumlah cara mengambil 2 bola dari total 10 bola (ruang sampel).<br>\\(C(10, 2) = \\frac{10!}{2!8!} = \\frac{10 \\times 9}{2 \\times 1} = 45\\) cara.<br><br>Langkah 3: Hitung jumlah cara mengambil 2 bola bukan merah dari 7 bola bukan merah.<br>\\(C(7, 2) = \\frac{7!}{2!5!} = \\frac{7 \\times 6}{2 \\times 1} = 21\\) cara.<br><br>Langkah 4: Hitung peluang terambil kedua bola bukan merah.<br>\\(P(\\text{bukan merah}) = \\frac{\\text{Jumlah cara mengambil 2 bola bukan merah}}{\\text{Total cara mengambil 2 bola}}\\)<br>\\(P(\\text{bukan merah}) = \\frac{21}{45}\\)<br><br>Langkah 5: Sederhanakan pecahan.<br>Bagi pembilang dan penyebut dengan 3.<br>\\(P(\\text{bukan merah}) = \\frac{21 \\div 3}{45 \\div 3} = \\frac{7}{15}\\).<br><br>Jadi, peluang kedua bola yang terambil bukan bola merah adalah \\(\\frac{7}{15}\\)."
+            },
+            {
+                id: 23,
+                text: "Tentukan invers dari fungsi \\(f(x) = \\frac{3x+2}{2x-1}\\), dengan \\(x \\neq \\frac{1}{2}\\).",
+                options: ["\\(f^{-1}(x) = \\frac{x-2}{2x+3}\\)", "\\(f^{-1}(x) = \\frac{x+2}{2x-3}\\)", "\\(f^{-1}(x) = \\frac{x+2}{2x+3}\\)", "\\(f^{-1}(x) = \\frac{2x-1}{3x+2}\\)", "\\(f^{-1}(x) = \\frac{1-2x}{3x+2}\\)"],
+                answer: "\\(f^{-1}(x) = \\frac{x+2}{2x-3}\\)",
+                solution: "Langkah 1: Misalkan \\(y = f(x)\\).<br>\\(y = \\frac{3x+2}{2x-1}\\)<br><br>Langkah 2: Tukar posisi \\(x\\) dan \\(y\\).<br>\\(x = \\frac{3y+2}{2y-1}\\)<br><br>Langkah 3: Selesaikan persamaan untuk \\(y\\).<br>\\(x(2y-1) = 3y+2\\)<br>\\(2xy - x = 3y + 2\\)<br><br>Langkah 4: Kumpulkan semua suku yang mengandung \\(y\\) di satu sisi dan suku lainnya di sisi lain.<br>\\(2xy - 3y = x + 2\\)<br><br>Langkah 5: Faktorkan \\(y\\).<br>\\(y(2x - 3) = x + 2\\)<br><br>Langkah 6: Isolasi \\(y\\).<br>\\(y = \\frac{x+2}{2x-3}\\)<br><br>Langkah 7: Ganti \\(y\\) dengan \\(f^{-1}(x)\\).<br>\\(f^{-1}(x) = \\frac{x+2}{2x-3}\\)<br><br>Syarat domain untuk invers adalah \\(2x - 3 \\neq 0 \\implies x \\neq \\frac{3}{2}\\).<br><br>Jadi, invers dari fungsi \\(f(x)\\) adalah \\(f^{-1}(x) = \\frac{x+2}{2x-3}\\)."
+            },
+            {
+                id: 24,
+                text: "Tentukan panjang proyeksi vektor \\(\\vec{u} = \\begin{pmatrix} 2 \\\\ -1 \\\\ 3 \\end{pmatrix}\\) pada vektor \\(\\vec{v} = \\begin{pmatrix} 1 \\\\ 2 \\\\ -2 \\end{pmatrix}\\).",
+                options: ["\\(\\frac{2}{\\sqrt{6}}\\)", "\\(\\frac{3}{\\sqrt{6}}\\)", "\\(\\frac{-6}{3}\\)", "\\(\\frac{-6}{\\sqrt{6}}\\)", "\\(\\frac{2}{3}\\)"],
+                answer: "\\(\\frac{-6}{3}\\)",
+                solution: "Rumus panjang proyeksi skalar (skalar proyeksi) vektor \\(\\vec{u}\\) pada \\(\\vec{v}\\) adalah \\(p = \\frac{\\vec{u} \\cdot \\vec{v}}{|\\vec{v}|}\\).<br><br>Langkah 1: Hitung produk titik \\(\\vec{u} \\cdot \\vec{v}\\).<br>\\(\\vec{u} \\cdot \\vec{v} = (2)(1) + (-1)(2) + (3)(-2)\\)<br>\\(\\quad = 2 - 2 - 6\\)<br>\\(\\quad = -6\\)<br><br>Langkah 2: Hitung panjang (magnitudo) vektor \\(\\vec{v}\\).<br>\\(|\\vec{v}| = \\sqrt{1^2 + 2^2 + (-2)^2}\\)<br>\\(\\quad = \\sqrt{1 + 4 + 4}\\)<br>\\(\\quad = \\sqrt{9}\\)<br>\\(\\quad = 3\\)<br><br>Langkah 3: Hitung panjang proyeksi.<br>\\(p = \\frac{-6}{3} = -2\\)<br><br>Jadi, panjang proyeksi vektor \\(\\vec{u}\\) pada \\(\\vec{v}\\) adalah \\(-2\\)."
+            },
+            {
+                id: 25,
+                text: "Tentukan himpunan penyelesaian dari \\(\\cos 2x = \\frac{1}{2}\\) untuk \\(0^\\circ \\leq x \\leq 180^\\circ\\).",
+                options: ["\\(\\{30^\\circ, 150^\\circ\\}\\)", "\\(\\{15^\\circ, 75^\\circ\\}\\)", "\\(\\{30^\\circ, 75^\\circ\\}\\)", "\\(\\{30^\\circ, 105^\\circ\\}\\)", "\\(\\{15^\\circ, 105^\\circ\\}\\)"],
+                answer: "\\(\\{30^\\circ, 150^\\circ\\}\\)",
+                solution: "Langkah 1: Tentukan sudut referensi untuk \\(\\cos \\theta = \\frac{1}{2}\\).<br>Sudut di kuadran I yang cosinusnya \\(\\frac{1}{2}\\) adalah \\(60^\\circ\\). Jadi \\(\\alpha = 60^\\circ\\).<br><br>Langkah 2: Gunakan rumus umum untuk persamaan \\(\\cos \\theta = \\cos \\alpha\\).<br>\\(\\theta = \\alpha + k \\cdot 360^\\circ\\) atau \\(\\theta = -\\alpha + k \\cdot 360^\\circ\\).<br>Di sini, \\(\\theta = 2x\\).<br><br>Kasus 1: \\(2x = 60^\\circ + k \\cdot 360^\\circ\\)<br>\\(x = 30^\\circ + k \\cdot 180^\\circ\\)<br>Untuk \\(k = 0\\): \\(x = 30^\\circ\\) (memenuhi \\(0^\\circ \\leq x \\leq 180^\\circ\\))<br>Untuk \\(k = 1\\): \\(x = 30^\\circ + 180^\\circ = 210^\\circ\\) (tidak memenuhi)<br><br>Kasus 2: \\(2x = -60^\\circ + k \\cdot 360^\\circ\\)<br>\\(x = -30^\\circ + k \\cdot 180^\\circ\\)<br>Untuk \\(k = 0\\): \\(x = -30^\\circ\\) (tidak memenuhi)<br>Untuk \\(k = 1\\): \\(x = -30^\\circ + 180^\\circ = 150^\\circ\\) (memenuhi \\(0^\\circ \\leq x \\leq 180^\\circ\\))<br>Untuk \\(k = 2\\): \\(x = -30^\\circ + 360^\\circ = 330^\\circ\\) (tidak memenuhi)<br><br>Jadi, himpunan penyelesaiannya untuk \\(0^\\circ \\leq x \\leq 180^\\circ\\) adalah \\(\\{30^\\circ, 150^\\circ\\}\\)."
+            },
+            {
+                id: 26,
+                text: "Tentukan hasil dari \\(\\int_0^1 (x^2 + 2x) dx\\).",
+                options: ["\\(\\frac{1}{3}\\)", "\\(\\frac{2}{3}\\)", "\\(1\\)", "\\(\\frac{4}{3}\\)", "\\(2\\)"],
+                answer: "\\(\\frac{4}{3}\\)",
+                solution: "Langkah 1: Integralkan fungsi \\((x^2 + 2x)\\).<br>\\(\\int (x^2 + 2x) dx = \\frac{1}{2+1}x^{2+1} + \\frac{2}{1+1}x^{1+1} + C = \\frac{1}{3}x^3 + x^2 + C\\).<br><br>Langkah 2: Terapkan batas integrasi (integral tentu).<br>\\(\\left[\\frac{1}{3}x^3 + x^2\\right]_0^1 = \\left(\\frac{1}{3}(1)^3 + (1)^2\\right) - \\left(\\frac{1}{3}(0)^3 + (0)^2\\right)\\)<br>\\(\\quad = \\left(\\frac{1}{3} + 1\\right) - (0 + 0)\\)<br>\\(\\quad = \\frac{1}{3} + \\frac{3}{3}\\)<br>\\(\\quad = \\frac{4}{3}\\)<br><br>Jadi, hasil dari \\(\\int_0^1 (x^2 + 2x) dx\\) adalah \\(\\frac{4}{3}\\)."
+            },
+            {
+                id: 27,
+                text: "Seorang peneliti mencatat pertumbuhan bakteri yang mengikuti fungsi eksponensial \\(N(t) = N_0 \\cdot 2^{t/3}\\), di mana \\(N_0\\) adalah jumlah bakteri awal dan \\(t\\) adalah waktu dalam jam. Jika jumlah bakteri awal adalah 100, berapa waktu yang dibutuhkan agar jumlah bakteri menjadi 800?",
+                options: ["\\(3\\) jam", "\\(6\\) jam", "\\(9\\) jam", "\\(12\\) jam", "\\(15\\) jam"],
+                answer: "\\(9\\) jam",
+                solution: "Langkah 1: Tuliskan fungsi pertumbuhan bakteri dan nilai yang diketahui.<br>\\(N(t) = N_0 \\cdot 2^{t/3}\\)<br>\\(N_0 = 100\\)<br>\\(N(t) = 800\\)<br><br>Langkah 2: Substitusikan nilai-nilai yang diketahui ke dalam fungsi.<br>\\(800 = 100 \\cdot 2^{t/3}\\)<br><br>Langkah 3: Selesaikan persamaan eksponensial untuk \\(t\\).<br>Bagi kedua sisi dengan 100:<br>\\(\\frac{800}{100} = 2^{t/3}\\)<br>\\(8 = 2^{t/3}\\)<br><br>Langkah 4: Ubah basis menjadi sama.<br>Kita tahu bahwa \\(8 = 2^3\\).<br>\\(2^3 = 2^{t/3}\\)<br><br>Langkah 5: Samakan eksponen.<br>\\(3 = \\frac{t}{3}\\)<br>\\(t = 3 \\times 3\\)<br>\\(t = 9\\) jam.<br><br>Jadi, waktu yang dibutuhkan agar jumlah bakteri menjadi \\(800\\) adalah \\(9\\) jam."
+            },
+            {
+                id: 28,
+                text: "Diketahui fungsi \\(f(x) = ax^2 + bx + c\\) memiliki titik puncak \\((1, 4)\\) dan melalui titik \\((0, 3)\\). Tentukan nilai \\(a, b, c\\).",
+                options: [
+                    "\\(a=-1, b=2, c=3\\)",
+                    "\\(a=1, b=-2, c=3\\)",
+                    "\\(a=-1, b=2, c=2\\)",
+                    "\\(a=1, b=2, c=3\\)",
+                    "\\(a=-2, b=4, c=3\\)"
+                ],
+                answer: "\\(a=-1, b=2, c=3\\)",
+                solution: "Langkah 1: Gunakan titik yang dilalui untuk mencari nilai \\(c\\).<br>Fungsi \\(f(x) = ax^2 + bx + c\\) melalui titik \\((0, 3)\\).<br>Substitusikan \\(x=0\\) dan \\(f(x)=3\\):<br>\\(3 = a(0)^2 + b(0) + c\\)<br>\\(3 = c\\).<br>Jadi, \\(c = 3\\). Fungsi menjadi \\(f(x) = ax^2 + bx + 3\\).<br><br>Langkah 2: Gunakan titik puncak \\((x_p, y_p) = (1, 4)\\).<br>Rumus \\(x_p = -\\frac{b}{2a}\\).<br>\\(1 = -\\frac{b}{2a}\\)<br>\\(b = -2a\\) ...(1)<br><br>Langkah 3: Gunakan \\(y_p = f(x_p)\\).<br>Substitusikan \\(x_p=1\\) dan \\(f(x_p)=4\\) ke dalam \\(f(x) = ax^2 + bx + 3\\).<br>\\(4 = a(1)^2 + b(1) + 3\\)<br>\\(4 = a + b + 3\\)<br>\\(1 = a + b\\) ...(2)<br><br>Langkah 4: Substitusikan persamaan (1) ke persamaan (2).<br>\\(1 = a + (-2a)\\)<br>\\(1 = -a\\)<br>\\(a = -1\\).<br><br>Langkah 5: Substitusikan nilai \\(a\\) kembali ke persamaan (1) untuk mencari \\(b\\).<br>\\(b = -2(-1)\\)<br>\\(b = 2\\).<br><br>Jadi, nilai \\(a=-1, b=2, c=3\\)."
+            },
+            {
+                id: 29,
+                text: "Sebuah dadu dilemparkan 180 kali. Frekuensi harapan munculnya mata dadu kurang dari 3 adalah ....",
+                options: ["\\(30\\) kali", "\\(45\\) kali", "\\(60\\) kali", "\\(90\\) kali", "\\(120\\) kali"],
+                answer: "\\(60\\) kali",
+                solution: "Langkah 1: Tentukan ruang sampel dan kejadian.<br>Ruang sampel pelemparan dadu: \\(S = \\{1, 2, 3, 4, 5, 6\\}\\), jadi \\(n(S) = 6\\).<br>Kejadian muncul mata dadu kurang dari 3: \\(A = \\{1, 2\\}\\), jadi \\(n(A) = 2\\).<br><br>Langkah 2: Hitung peluang kejadian \\(A\\).<br>\\(P(A) = \\frac{n(A)}{n(S)} = \\frac{2}{6} = \\frac{1}{3}\\).<br><br>Langkah 3: Hitung frekuensi harapan.<br>Frekuensi harapan \\(E(A) = P(A) \\times \\text{Jumlah percobaan}\\).<br>Jumlah percobaan = 180 kali.<br>\\(E(A) = \\frac{1}{3} \\times 180 = 60\\) kali.<br><br>Jadi, frekuensi harapan munculnya mata dadu kurang dari 3 adalah \\(60\\) kali."
+            },
+            {
+                id: 30,
+                text: "Tentukan himpunan penyelesaian dari pertidaksamaan kuadrat \\(x^2 - 5x - 14 > 0\\).",
+                options: ["\\(x < -2\\) atau \\(x > 7\\)", "\\(-2 < x < 7\\)", "\\(x < -7\\) atau \\(x > 2\\)", "\\(-7 < x < 2\\)", "\\(x \\leq -2\\) atau \\(x \\geq 7\\)"],
+                answer: "\\(x < -2\\) atau \\(x > 7\\)",
+                solution: "Langkah 1: Cari akar-akar persamaan kuadrat \\(x^2 - 5x - 14 = 0\\).<br>Faktorkan persamaan kuadrat:<br>\\((x - 7)(x + 2) = 0\\)<br>Akar-akarnya adalah \\(x = 7\\) dan \\(x = -2\\).<br><br>Langkah 2: Buat garis bilangan dan uji titik.<br>Tandai akar-akar \\(-2\\) dan \\(7\\) pada garis bilangan. Ini akan membagi garis bilangan menjadi tiga interval: \\(x < -2\\), \\(-2 < x < 7\\), dan \\(x > 7\\).<br><br>Pilih titik uji dari setiap interval dan substitusikan ke dalam \\(x^2 - 5x - 14\\) untuk menentukan tanda (positif atau negatif).<br>a. Interval \\(x < -2\\): Pilih \\(x = -3\\)<br>   \\((-3)^2 - 5(-3) - 14 = 9 + 15 - 14 = 10\\). (Positif)<br>b. Interval \\(-2 < x < 7\\): Pilih \\(x = 0\\)<br>   \\(0^2 - 5(0) - 14 = -14\\). (Negatif)<br>c. Interval \\(x > 7\\): Pilih \\(x = 8\\)<br>   \\(8^2 - 5(8) - 14 = 64 - 40 - 14 = 10\\). (Positif)<br><br>Langkah 3: Tentukan interval yang memenuhi pertidaksamaan.<br>Kita mencari \\(x^2 - 5x - 14 > 0\\), yang berarti kita mencari interval di mana ekspresinya positif.<br>Dari uji titik, ekspresi positif pada interval \\(x < -2\\) dan \\(x > 7\\).<br><br>Jadi, himpunan penyelesaian dari pertidaksamaan \\(x^2 - 5x - 14 > 0\\) adalah \\(x < -2\\) atau \\(x > 7\\)."
+            },
+            {
+                id: 31,
+                text: "Tentukan sisa pembagian \\(P(x) = x^3 - 2x^2 + 5x - 7\\) oleh \\((x + 1)\\).",
+                options: ["\\( -15\\)", "\\( -10\\)", "\\( -5\\)", "\\( 0\\)", "\\( 5\\)"],
+                answer: "\\( -15\\)",
+                solution: "Menurut Teorema Sisa, jika polinomial \\(P(x)\\) dibagi oleh \\((x - c)\\), maka sisa pembagiannya adalah \\(P(c)\\).<br><br>Dalam kasus ini, \\(P(x) = x^3 - 2x^2 + 5x - 7\\) dibagi oleh \\((x + 1)\\).<br>Pembagi \\((x + 1)\\) dapat ditulis sebagai \\((x - (-1))\\), jadi \\(c = -1\\).<br><br>Langkah 1: Substitusikan \\(x = -1\\) ke dalam \\(P(x)\\).<br>\\(P(-1) = (-1)^3 - 2(-1)^2 + 5(-1) - 7\\)<br><br>Langkah 2: Hitung nilainya.<br>\\(P(-1) = -1 - 2(1) - 5 - 7\\)<br>\\(P(-1) = -1 - 2 - 5 - 7\\)<br>\\(P(-1) = -3 - 5 - 7\\)<br>\\(P(-1) = -8 - 7\\)<br>\\(P(-1) = -15\\)<br><br>Jadi, sisa pembagian \\(P(x)\\) oleh \\((x + 1)\\) adalah \\(-15\\)."
+            },
+            {
+                id: 32,
+                text: "Jika \\(P = \\begin{pmatrix} 2 & 1 \\\\ 3 & 2 \\end{pmatrix}\\) dan \\(Q = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}\\), maka \\(P^{-1}Q\\) adalah ....",
+                options: ["\\(\\begin{pmatrix} 2 & -1 \\\\ -3 & 2 \\end{pmatrix}\\)", "\\(\\begin{pmatrix} -2 & 1 \\\\ 3 & -2 \\end{pmatrix}\\)", "\\(\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}\\)", "\\(\\begin{pmatrix} 2 & 1 \\\\ 3 & 2 \\end{pmatrix}\\)", "\\(\\begin{pmatrix} -2 & 1 \\\\ -3 & 2 \\end{pmatrix}\\)"],
+                answer: "\\(\\begin{pmatrix} 2 & -1 \\\\ -3 & 2 \\end{pmatrix}\\)",
+                solution: "Langkah 1: Hitung invers dari matriks \\(P\\).<br>Untuk matriks \\(P = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\\), inversnya adalah \\(P^{-1} = \\frac{1}{\\det(P)} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}\\).<br><br>Pertama, hitung determinan \\(P\\):<br>\\(\\det(P) = (2)(2) - (1)(3) = 4 - 3 = 1\\).<br><br>Kemudian, hitung \\(P^{-1}\\):<br>\\(P^{-1} = \\frac{1}{1} \\begin{pmatrix} 2 & -1 \\\\ -3 & 2 \\end{pmatrix} = \\begin{pmatrix} 2 & -1 \\\\ -3 & 2 \\end{pmatrix}\\).<br><br>Langkah 2: Kalikan \\(P^{-1}\\) dengan matriks \\(Q\\).<br>Matriks \\(Q = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}\\) adalah matriks identitas (\\(I\\)).<br>Ketika suatu matriks dikalikan dengan matriks identitas, hasilnya adalah matriks itu sendiri.<br>\\(P^{-1}Q = P^{-1}I = P^{-1}\\)<br><br>Jadi, \\(P^{-1}Q = \\begin{pmatrix} 2 & -1 \\\\ -3 & 2 \\end{pmatrix}\\)."
+            },
+            {
+                id: 33,
+                text: "Tentukan persamaan grafik fungsi kuadrat yang memiliki titik balik \\((2, 1)\\) dan melalui titik \\((0, 5)\\).",
+                options: [
+                    "\\(y = x^2 - 4x + 5\\)",
+                    "\\(y = -x^2 + 4x + 1\\)",
+                    "\\(y = x^2 - 4x + 3\\)",
+                    "\\(y = 2x^2 - 8x + 5\\)",
+                    "\\(y = x^2 + 4x + 5\\)"
+                ],
+                answer: "\\(y = x^2 - 4x + 5\\)",
+                solution: "Langkah 1: Gunakan bentuk umum persamaan kuadrat dengan titik balik.<br>\\(y = a(x - x_p)^2 + y_p\\)<br>Diketahui titik balik \\((x_p, y_p) = (2, 1)\\).<br>Substitusikan ke dalam rumus:<br>\\(y = a(x - 2)^2 + 1\\)<br><br>Langkah 2: Gunakan titik lain yang dilalui \\((0, 5)\\) untuk mencari nilai \\(a\\).<br>Substitusikan \\(x=0\\) dan \\(y=5\\) ke dalam persamaan dari Langkah 1.<br>\\(5 = a(0 - 2)^2 + 1\\)<br>\\(5 = a(-2)^2 + 1\\)<br>\\(5 = 4a + 1\\)<br><br>Langkah 3: Selesaikan untuk \\(a\\).<br>\\(4 = 4a\\)<br>\\(a = 1\\).<br><br>Langkah 4: Substitusikan nilai \\(a\\) kembali ke persamaan di Langkah 1 dan sederhanakan.<br>\\(y = 1(x - 2)^2 + 1\\)<br>\\(y = (x^2 - 4x + 4) + 1\\)<br>\\(y = x^2 - 4x + 5\\)<br><br>Jadi, persamaan grafik fungsi kuadrat tersebut adalah \\(y = x^2 - 4x + 5\\)."
+            },
+            {
+                id: 34,
+                text: "Tentukan hasil dari \\(\\int_0^{\\pi/2} \\sin x \\cos x dx\\).",
+                options: ["\\(0\\)", "\\(\\frac{1}{4}\\)", "\\(\\frac{1}{2}\\)", "\\(1\\)", "\\(2\\)"],
+                answer: "\\(\\frac{1}{2}\\)",
+                solution: "Langkah 1: Gunakan substitusi untuk menyelesaikan integral tak tentu.<br>Misalkan \\(u = \\sin x\\). Maka \\(\\frac{du}{dx} = \\cos x\\), sehingga \\(du = \\cos x dx\\).<br>Integral menjadi \\(\\int u du = \\frac{1}{2}u^2 + C\\).<br><br>Langkah 2: Substitusikan kembali \\(u = \\sin x\\).<br>Integral tak tentu adalah \\(\\frac{1}{2}\\sin^2 x + C\\).<br><br>Langkah 3: Terapkan batas integrasi \\(0\\) sampai \\(\\frac{\\pi}{2}\\) (integral tentu).<br>\\(\\left[\\frac{1}{2}\\sin^2 x\\right]_0^{\\pi/2} = \\frac{1}{2}\\sin^2(\\frac{\\pi}{2}) - \\frac{1}{2}\\sin^2(0)\\)<br><br>Langkah 4: Hitung nilai sinus pada batas.<br>\\(\\sin(\\frac{\\pi}{2}) = \\sin(90^\\circ) = 1\\)<br>\\(\\sin(0) = 0\\)<br><br>Langkah 5: Substitusikan dan hitung hasilnya.<br>\\(\\frac{1}{2}(1)^2 - \\frac{1}{2}(0)^2 = \\frac{1}{2}(1) - 0 = \\frac{1}{2}\\).<br><br>Jadi, hasil dari \\(\\int_0^{\\pi/2} \\sin x \\cos x dx\\) adalah \\(\\frac{1}{2}\\)."
+            },
+            {
+                id: 35,
+                text: "Jika \\(\\cos A = \\frac{4}{5}\\) dan \\(\\sin B = \\frac{5}{13}\\), dengan \\(A\\) dan \\(B\\) adalah sudut lancip, maka nilai dari \\(\\cos(A+B)\\) adalah ....",
+                options: ["\\(\\frac{16}{65}\\)", "\\(\\frac{33}{65}\\)", "\\(\\frac{56}{65}\\)", "\\(\\frac{63}{65}\\)", "\\(\\frac{30}{65}\\)"],
+                answer: "\\(\\frac{33}{65}\\)",
+                solution: "Langkah 1: Cari nilai \\(\\sin A\\) dan \\(\\cos B\\).<br>Untuk sudut \\(A\\) lancip, jika \\(\\cos A = \\frac{4}{5}\\), maka kita bisa membentuk segitiga siku-siku dengan sisi samping 4 dan sisi miring 5. Sisi depan adalah \\(\\sqrt{5^2 - 4^2} = \\sqrt{25 - 16} = \\sqrt{9} = 3\\).<br>Jadi, \\(\\sin A = \\frac{3}{5}\\).<br><br>Untuk sudut \\(B\\) lancip, jika \\(\\sin B = \\frac{5}{13}\\), maka kita bisa membentuk segitiga siku-siku dengan sisi depan 5 dan sisi miring 13. Sisi samping adalah \\(\\sqrt{13^2 - 5^2} = \\sqrt{169 - 25} = \\sqrt{144} = 12\\).<br>Jadi, \\(\\cos B = \\frac{12}{13}\\).<br><br>Langkah 2: Gunakan rumus penjumlahan sudut untuk cosinus.<br>\\(\\cos(A+B) = \\cos A \\cos B - \\sin A \\sin B\\)<br><br>Langkah 3: Substitusikan nilai-nilai yang ditemukan.<br>\\(\\cos(A+B) = \\left(\\frac{4}{5}\\right) \\left(\\frac{12}{13}\\right) - \\left(\\frac{3}{5}\\right) \\left(\\frac{5}{13}\\right)\\)<br>\\(\\quad = \\frac{48}{65} - \\frac{15}{65}\\)<br>\\(\\quad = \\frac{48 - 15}{65}\\)<br>\\(\\quad = \\frac{33}{65}\\)<br><br>Jadi, nilai dari \\(\\cos(A+B)\\) adalah \\(\\frac{33}{65}\\)."
+            },
+            {
+                id: 36,
+                text: "Diketahui fungsi \\(f(x) = x^3 - 6x^2 + 9x + 1\\). Tentukan interval di mana fungsi tersebut naik.",
+                options: ["\\(x < 1\\) atau \\(x > 3\\)", "\\(1 < x < 3\\)", "\\(x < -1\\) atau \\(x > 3\\)", "\\(-1 < x < 3\\)", "Seluruh domain \\(x\\)"],
+                answer: "\\(x < 1\\) atau \\(x > 3\\)",
+                solution: "Langkah 1: Cari turunan pertama \\(f'(x)\\).<br>\\(f(x) = x^3 - 6x^2 + 9x + 1\\)<br>\\(f'(x) = 3x^2 - 12x + 9\\)<br><br>Langkah 2: Tentukan titik-titik stasioner dengan menyamakan \\(f'(x) = 0\\).<br>\\(3x^2 - 12x + 9 = 0\\)<br>Bagi dengan 3:<br>\\(x^2 - 4x + 3 = 0\\)<br><br>Langkah 3: Faktorkan persamaan kuadrat untuk mencari akar-akar \\(x\\).<br>\\((x - 1)(x - 3) = 0\\)<br>Akar-akarnya adalah \\(x = 1\\) dan \\(x = 3\\).<br><br>Langkah 4: Buat garis bilangan dan uji interval.<br>Titik-titik kritis adalah \\(x = 1\\) dan \\(x = 3\\). Ini membagi garis bilangan menjadi tiga interval: \\(x < 1\\), \\(1 < x < 3\\), dan \\(x > 3\\).<br><br>Uji nilai \\(x\\) di setiap interval ke dalam \\(f'(x) = 3x^2 - 12x + 9\\) (atau \\((x-1)(x-3)\\)) untuk menentukan tanda:<br>a. Interval \\(x < 1\\): Pilih \\(x = 0\\)<br>   \\(f'(0) = 3(0)^2 - 12(0) + 9 = 9\\) (Positif, fungsi naik)<br>b. Interval \\(1 < x < 3\\): Pilih \\(x = 2\\)<br>   \\(f'(2) = 3(2)^2 - 12(2) + 9 = 3(4) - 24 + 9 = 12 - 24 + 9 = -3\\) (Negatif, fungsi turun)<br>c. Interval \\(x > 3\\): Pilih \\(x = 4\\)<br>   \\(f'(4) = 3(4)^2 - 12(4) + 9 = 3(16) - 48 + 9 = 48 - 48 + 9 = 9\\) (Positif, fungsi naik)<br><br>Langkah 5: Tentukan interval di mana fungsi naik.<br>Fungsi \\(f(x)\\) naik ketika \\(f'(x) > 0\\).<br>Dari uji titik, ini terjadi pada interval \\(x < 1\\) atau \\(x > 3\\).<br><br>Jadi, fungsi tersebut naik pada interval \\(x < 1\\) atau \\(x > 3\\)."
+            },
+            {
+                id: 37,
+                text: "Tentukan volume benda putar yang terjadi jika daerah yang dibatasi oleh kurva \\(y = x^2\\), sumbu \\(x\\), dan garis \\(x = 2\\) diputar mengelilingi sumbu \\(x\\).",
+                options: ["\\(\\frac{16\\pi}{5}\\)", "\\(\\frac{32\\pi}{5}\\)", "\\(\\frac{8\\pi}{3}\\)", "\\(\\frac{12\\pi}{5}\\)", "\\(\\frac{4\\pi}{3}\\)"],
+                answer: "\\(\\frac{32\\pi}{5}\\)",
+                solution: "Gunakan metode cakram untuk menghitung volume benda putar yang diputar mengelilingi sumbu \\(x\\). Rumusnya adalah \\(V = \\pi \\int_a^b [f(x)]^2 dx\\).<br><br>Langkah 1: Identifikasi fungsi dan batas integrasi.<br>Fungsi: \\(y = f(x) = x^2\\)<br>Batas integrasi: dari sumbu \\(x\\) (y=0) hingga \\(x = 2\\), jadi \\(a=0\\) dan \\(b=2\\).<br><br>Langkah 2: Substitusikan ke dalam rumus volume.<br>\\(V = \\pi \\int_0^2 (x^2)^2 dx\\)<br>\\(V = \\pi \\int_0^2 x^4 dx\\)<br><br>Langkah 3: Integralkan fungsi \\(x^4\\).<br>\\(\\int x^4 dx = \\frac{1}{5}x^5 + C\\).<br><br>Langkah 4: Terapkan batas integrasi.<br>\\(V = \\pi \\left[\\frac{1}{5}x^5\\right]_0^2\\)<br>\\(V = \\pi \\left( \\frac{1}{5}(2)^5 - \\frac{1}{5}(0)^5 \\right)\\)<br>\\(V = \\pi \\left( \\frac{1}{5}(32) - 0 \\right)\\)<br>\\(V = \\frac{32\\pi}{5}\\)<br><br>Jadi, volume benda putar tersebut adalah \\(\\frac{32\\pi}{5}\\)."
+            },
+            {
+                id: 38,
+                text: "Tentukan invers dari matriks \\(A = \\begin{pmatrix} 5 & -2 \\\\ 3 & -1 \\end{pmatrix}\\).",
+                options: ["\\(\\begin{pmatrix} -1 & 2 \\\\ -3 & 5 \\end{pmatrix}\\)", "\\(\\begin{pmatrix} 1 & -2 \\\\ -3 & 5 \\end{pmatrix}\\)", "\\(\\begin{pmatrix} -1 & -2 \\\\ -3 & -5 \\end{pmatrix}\\)", "\\(\\begin{pmatrix} 5 & 2 \\\\ -3 & -1 \\end{pmatrix}\\)", "\\(\\begin{pmatrix} -5 & 2 \\\\ -3 & 1 \\end{pmatrix}\\)"],
+                answer: "\\(\\begin{pmatrix} -1 & 2 \\\\ -3 & 5 \\end{pmatrix}\\)",
+                solution: "Untuk matriks \\(A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\\), inversnya adalah \\(A^{-1} = \\frac{1}{\\det(A)} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}\\).<br><br>Langkah 1: Hitung determinan matriks \\(A\\).<br>\\(\\det(A) = ad - bc = (5)(-1) - (-2)(3)\\)<br>\\(\\det(A) = -5 - (-6)\\)<br>\\(\\det(A) = -5 + 6 = 1\\).<br><br>Langkah 2: Terapkan rumus invers.<br>\\(A^{-1} = \\frac{1}{1} \\begin{pmatrix} -1 & -(-2) \\\\ -3 & 5 \\end{pmatrix}\\)<br>\\(A^{-1} = \\begin{pmatrix} -1 & 2 \\\\ -3 & 5 \\end{pmatrix}\\).<br><br>Jadi, invers dari matriks \\(A\\) adalah \\(\\begin{pmatrix} -1 & 2 \\\\ -3 & 5 \\end{pmatrix}\\)."
+            },
+            {
+                id: 39,
+                text: "Jika rata-rata dari \\(x, y, z\\) adalah \\(10\\), dan rata-rata dari \\(x, y, z, w\\) adalah \\(12\\), maka nilai \\(w\\) adalah ....",
+                options: ["\\(12\\)", "\\(14\\)", "\\(16\\)", "\\(18\\)", "\\(20\\)"],
+                answer: "\\(18\\)",
+                solution: "Langkah 1: Gunakan definisi rata-rata untuk mencari jumlah \\(x, y, z\\).<br>Rata-rata dari \\(x, y, z\\) adalah \\(10\\). Jumlah data adalah 3.<br>\\(\\frac{x+y+z}{3} = 10\\)<br>Maka, \\(x+y+z = 3 \\times 10 = 30\\) ...(1)<br><br>Langkah 2: Gunakan definisi rata-rata untuk mencari jumlah \\(x, y, z, w\\).<br>Rata-rata dari \\(x, y, z, w\\) adalah \\(12\\). Jumlah data adalah 4.<br>\\(\\frac{x+y+z+w}{4} = 12\\)<br>Maka, \\(x+y+z+w = 4 \\times 12 = 48\\) ...(2)<br><br>Langkah 3: Substitusikan persamaan (1) ke persamaan (2).<br>\\(30 + w = 48\\)<br><br>Langkah 4: Selesaikan untuk \\(w\\).<br>\\(w = 48 - 30\\)<br>\\(w = 18\\)<br><br>Jadi, nilai \\(w\\) adalah \\(18\\)."
+            },
+            {
+                id: 40,
+                text: "Tentukan nilai dari \\(\\lim_{h \\to 0} \\frac{(x+h)^2 - x^2}{h}\\).",
+                options: ["\\(x\\)", "\\(2x\\)", "\\(x^2\\)", "\\(h\\)", "Tidak terdefinisi"],
+                answer: "\\(2x\\)",
+                solution: "Ini adalah definisi turunan dari fungsi \\(f(x) = x^2\\) menggunakan limit.<br><br>Langkah 1: Ekspansi \\((x+h)^2\\).<br>\\((x+h)^2 = x^2 + 2xh + h^2\\)<br><br>Langkah 2: Substitusikan kembali ke dalam limit.<br>\\(\\lim_{h \\to 0} \\frac{(x^2 + 2xh + h^2) - x^2}{h}\\)<br><br>Langkah 3: Sederhanakan pembilang.<br>\\(\\lim_{h \\to 0} \\frac{2xh + h^2}{h}\\)<br><br>Langkah 4: Faktorkan \\(h\\) dari pembilang.<br>\\(\\lim_{h \\to 0} \\frac{h(2x + h)}{h}\\)<br><br>Langkah 5: Batalkan \\(h\\) (karena \\(h \\to 0\\), maka \\(h \\neq 0\\)).<br>\\(\\lim_{h \\to 0} (2x + h)\\)<br><br>Langkah 6: Substitusikan \\(h=0\\) ke dalam ekspresi yang disederhanakan.<br>\\(2x + 0 = 2x\\)<br><br>Jadi, nilai dari \\(\\lim_{h \\to 0} \\frac{(x+h)^2 - x^2}{h}\\) adalah \\(2x\\)."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        const userAnswers = new Array(questions.length).fill(null);
+        // Set a longer time for 40 higher-level questions, e.g., 90 minutes (90 * 60 seconds)
+        let timeLeft = 120 * 60; 
+        let timerInterval;
+        let isReviewMode = false; 
+
+        // Get DOM elements
+        const questionArea = document.getElementById('question-area');
+        const questionListContainer = document.getElementById('question-list');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const finishExamButton = document.getElementById('finish-exam-button');
+        const countdownTimerDisplay = document.getElementById('countdown-timer');
+        const currentTimeDisplay = document.querySelector('#current-time strong');
+        const scoreModal = document.getElementById('scoreModal');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const closeModalButton = document.getElementById('closeModal');
+        const examNavigationDiv = document.getElementById('exam-navigation');
+        const examFinishDiv = document.getElementById('exam-finish');
+
+
+        // Function to render MathJax equations
+        function renderMathJax() {
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Function to load and display a question
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const question = questions[index];
+            let optionsHtml = '';
+
+            question.options.forEach((option, i) => {
+                const optionId = `q${question.id}-option${i}`;
+                const isChecked = userAnswers[index] === option;
+                const isCorrect = question.answer === option;
+                
+                let labelClass = '';
+                if (isReviewMode) {
+                    if (isCorrect) {
+                        labelClass = 'correct-answer-label';
+                    } else if (isChecked && !isCorrect) {
+                        labelClass = 'wrong-answer-label';
+                    } else if (isChecked && isCorrect) { // If user answered correctly
+                        labelClass = 'user-answer-label correct-answer-label';
+                    }
+                }
+
+                optionsHtml += `
+                    <label for="${optionId}" class="${labelClass}">
+                        <input type="radio" id="${optionId}" name="question${question.id}" value="${option}" ${isChecked ? 'checked' : ''} ${isReviewMode ? 'disabled' : ''}>
+                        ${option}
+                    </label>
+                `;
+            });
+
+            let solutionSection = '';
+            let optionsAreaClass = 'options';
+            if (isReviewMode) {
+                optionsAreaClass += ' review';
+                solutionSection = `
+                    <button class="review-solution-button" onclick="toggleSolution(${question.id})">Tampilkan Solusi</button>
+                    <div id="solution-${question.id}" class="solution-text">
+                        <p><strong>Solusi:</strong></p>
+                        <p>${question.solution}</p>
+                    </div>
+                `;
+            }
+
+            questionArea.innerHTML = `
+                <h2>Soal No. ${question.id}</h2>
+                <div class="question-text">${question.text}</div>
+                <div class="${optionsAreaClass}">
+                    ${optionsHtml}
+                </div>
+                ${solutionSection}
+            `;
+            
+            if (!isReviewMode) {
+                const radioButtons = questionArea.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => {
+                    radio.addEventListener('change', (event) => {
+                        saveAnswer(index, event.target.value);
+                    });
+                });
+            }
+            
+            updateNavigationButtons();
+            updateQuestionListColors();
+            renderMathJax(); 
+        }
+
+        function toggleSolution(questionId) {
+            const solutionDiv = document.getElementById(`solution-${questionId}`);
+            const button = questionArea.querySelector('.review-solution-button'); 
+            if (solutionDiv.style.display === 'none' || solutionDiv.style.display === '') {
+                solutionDiv.style.display = 'block';
+                button.textContent = 'Sembunyikan Solusi';
+            } else {
+                solutionDiv.style.display = 'none';
+                button.textContent = 'Tampilkan Solusi';
+            }
+            renderMathJax(); 
+        }
+
+        function saveAnswer(questionIndex, value) {
+            userAnswers[questionIndex] = value;
+            updateQuestionListColors();
+        }
+
+        function updateNavigationButtons() {
+            prevButton.disabled = currentQuestionIndex === 0;
+            nextButton.disabled = currentQuestionIndex === questions.length - 1;
+        }
+
+        function updateQuestionListColors() {
+            questionListContainer.innerHTML = '';
+            questions.forEach((q, index) => {
+                const button = document.createElement('button');
+                button.textContent = q.id;
+                button.onclick = () => loadQuestion(index);
+                if (index === currentQuestionIndex) {
+                    button.classList.add('active');
+                }
+                if (userAnswers[index] !== null) {
+                    button.classList.add('answered');
+                }
+                questionListContainer.appendChild(button);
+            });
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+
+                countdownTimerDisplay.textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Waktu ujian habis!');
+                    finishExam();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            currentTimeDisplay.textContent = now.toLocaleString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', 
+                day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        }
+
+        function calculateScore() {
+            let correctAnswers = 0;
+            questions.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) {
+                    correctAnswers++;
+                }
+            });
+            return (correctAnswers / questions.length) * 100;
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+            const score = calculateScore();
+            finalScoreDisplay.textContent = `${score.toFixed(2)}%`;
+            if (score >= 80) {
+                feedbackMessage.textContent = "Selamat! Anda mendapatkan skor yang sangat baik.";
+                finalScoreDisplay.style.color = "#28a745";
+            } else if (score >= 60) {
+                feedbackMessage.textContent = "Cukup baik, terus tingkatkan kemampuan Anda.";
+                finalScoreDisplay.style.color = "#ffc107";
+            } else {
+                feedbackMessage.textContent = "Perlu lebih banyak belajar dan berlatih.";
+                finalScoreDisplay.style.color = "#dc3545";
+            }
+            scoreModal.style.display = 'flex';
+        }
+
+        function enterReviewMode() {
+            isReviewMode = true;
+            document.querySelector('.timer-box').style.display = 'none';
+            examFinishDiv.style.display = 'none';
+            examNavigationDiv.style.justifyContent = 'center'; 
+
+            const reviewInfo = document.createElement('div');
+            reviewInfo.classList.add('review-mode-info');
+            reviewInfo.textContent = 'Anda dalam mode review. Jawaban yang benar ditandai hijau, dan jawaban Anda (jika salah) ditandai merah. Klik tombol "Tampilkan Solusi" untuk melihat langkah penyelesaian.';
+            questionArea.insertAdjacentElement('beforebegin', reviewInfo);
+
+            loadQuestion(0); 
+        }
+
+        // Event Listeners
+        prevButton.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        });
+
+        finishExamButton.addEventListener('click', () => {
+            if (confirm('Apakah Anda yakin ingin mengakhiri ujian? Waktu akan berhenti dan jawaban akan dinilai.')) {
+                finishExam();
+            }
+        });
+
+        closeModalButton.addEventListener('click', () => {
+            scoreModal.style.display = 'none';
+            enterReviewMode();
+        });
+
+        // Initialize the exam when the window loads
+        window.onload = () => {
+            loadQuestion(currentQuestionIndex);
+            startTimer();
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000); 
+        };
+    </script>
+</body>
+</html>
